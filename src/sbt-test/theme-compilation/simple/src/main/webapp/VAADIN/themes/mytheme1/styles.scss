@@ -1,0 +1,10 @@
+@import "../reindeer/reindeer.scss";
+
+.mytheme {
+  @include reindeer;
+
+  $color : yellow;
+  .v-button-caption {
+    color:  $color;
+  }
+}
