@@ -33,6 +33,12 @@ After that you need to enabled the plugin on the projects you want to use it. Th
 
 The plugin doesn't add any Vaadin dependencies, those must be added explicitly to the projects using the plugin.
 
+### Examples
+
+ * A multi-module Vaadin Java add-on project: [PopupButton](https://github.com/henrikerola/PopupButton/tree/2.3)
+ * A simple Scaladin application: [Scaladin chat](https://github.com/henrikerola/scaladin-chat/tree/scaladin-3.0)
+
+
 ### Compiling widgetsets
 
 The task to compile Vaadin widgetsets is:
