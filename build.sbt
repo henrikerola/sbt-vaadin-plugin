@@ -18,3 +18,7 @@ scalariformSettings
 publishTo := Some(Resolver.file("GitHub", file(Option(System.getProperty("sbt-vaadin-plugin.repository.path")).getOrElse("../henrikerola.github.io/repository/snapshots"))))
 
 addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.4.2")
+
+ScriptedPlugin.scriptedSettings
+
+scriptedBufferLog := false
