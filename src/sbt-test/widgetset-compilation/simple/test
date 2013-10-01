@@ -3,4 +3,4 @@
 $ exists target/scala-2.10/resource_managed/main/webapp/VAADIN/widgetsets/com.example.MyWidgetset
 
 # gwt-unitCache should not be in the VAADIN dir because it ends up into the generated war file
-# $ absent target/scala-2.10/resource_managed/main/webapp/VAADIN/gwt-unitCache
+$ absent target/scala-2.10/resource_managed/main/webapp/VAADIN/gwt-unitCache

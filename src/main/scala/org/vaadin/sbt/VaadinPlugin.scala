@@ -18,14 +18,16 @@ object VaadinPlugin extends Plugin with VaadinKeys {
   val compileWidgetsetsTask = compileWidgetsets <<= (dependencyClasspath in Compile, resourceDirectories in Compile,
     widgetsets in compileWidgetsets, options in compileWidgetsets, javaOptions in compileWidgetsets,
     target in compileWidgetsets, thisProject, state, streams) map {
-      (fullCp, resources, widgetsets, args, jvmArgs, target, p, state, s) =>
+      (fullCp, resources, widgetsets, args, jvmArguments, target, p, state, s) =>
         implicit val log = s.log
 
         IO.createDirectory(target)
 
         val tmpDir = IO.createTemporaryDirectory
 
-        val cmdArgs = Seq("-war", target.absolutePath) ++
+        val jvmArgs = Seq("-Dgwt.persistentunitcachedir=" + tmpDir.absolutePath) ++ jvmArguments
+
+        val cmdArgs = Seq("-war", target absolutePath) ++
           addIfNotInArgs(args, "-extra", tmpDir absolutePath) ++
           addIfNotInArgs(args, "-deploy", tmpDir absolutePath) ++ args
 

@@ -3,3 +3,5 @@ libraryDependencies ++= Seq(
 )
 
 vaadinSettings
+
+javaOptions in compileWidgetsets := Seq("-Xss8M", "-Xmx512M", "-XX:MaxPermSize=512M")
