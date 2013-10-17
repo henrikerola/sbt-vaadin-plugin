@@ -9,6 +9,7 @@ import com.earldouglas.xsbtwebplugin.PluginKeys.webappResources
 import java.io.File
 import org.vaadin.sbt.util.ProjectUtil._
 import org.vaadin.sbt.util.ForkUtil._
+import org.vaadin.sbt.tasks._
 
 object VaadinPlugin extends Plugin with VaadinKeys {
 
@@ -17,44 +18,8 @@ object VaadinPlugin extends Plugin with VaadinKeys {
 
   val compileWidgetsetsTask = compileWidgetsets <<= (dependencyClasspath in Compile, resourceDirectories in Compile,
     widgetsets in compileWidgetsets, options in compileWidgetsets, javaOptions in compileWidgetsets,
-    target in compileWidgetsets, thisProject, state, streams) map {
-      (fullCp, resources, widgetsets, args, jvmArguments, target, p, state, s) =>
-        implicit val log = s.log
-
-        IO.createDirectory(target)
-
-        val tmpDir = IO.createTemporaryDirectory
-
-        val jvmArgs = Seq("-Dgwt.persistentunitcachedir=" + tmpDir.absolutePath) ++ jvmArguments
-
-        val cmdArgs = Seq("-war", target absolutePath) ++
-          addIfNotInArgs(args, "-extra", tmpDir absolutePath) ++
-          addIfNotInArgs(args, "-deploy", tmpDir absolutePath) ++ args
-
-        val exitValue = forkWidgetsetCmd(
-          jvmArgs,
-          getClassPath(state, fullCp),
-          "com.vaadin.tools.WidgetsetCompiler",
-          cmdArgs,
-          widgetsets,
-          resources)
-
-        exitValue match {
-          case Left(errorCode) => Nil
-          case Right(widgetsets) => {
-            log.debug("Deleting %s" format target / "WEB-INF")
-            IO.delete(target / "WEB-INF")
-
-            val generatedFiles: Seq[Seq[File]] = widgetsets map {
-              widgetset => (target / widgetset ** ("*")).get
-            }
-
-            log.debug("Generated files: %s".format(generatedFiles.flatten.mkString(", ")))
-
-            generatedFiles flatten
-          }
-        }
-    }
+    target in compileWidgetsets, thisProject, enableCompileWidgetsets, state,
+    streams) map CompileWidgetsetsTask.compileWidgetsets
 
   val devModeTask = devMode <<= (dependencyClasspath in Compile, resourceDirectories in Compile, widgetsets in devMode,
     options in devMode, javaOptions in devMode, target in devMode, state, streams) map {
@@ -154,6 +119,7 @@ object VaadinPlugin extends Plugin with VaadinKeys {
 
     compileWidgetsetsTask,
     widgetsets := Nil,
+    enableCompileWidgetsets := true,
     target in compileWidgetsets := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "widgetsets",
     options in compileWidgetsets := Nil,
     javaOptions in compileWidgetsets := Nil,
@@ -207,7 +173,10 @@ object VaadinPlugin extends Plugin with VaadinKeys {
   )
 
   val vaadinWebSettings = vaadinSettings ++ webSettings ++ Seq(
-    resourceGenerators in Compile <+= compileWidgetsets,
+    resourceGenerators in Compile <+= (dependencyClasspath in Compile, resourceDirectories in Compile,
+      widgetsets in compileWidgetsets, options in compileWidgetsets, javaOptions in compileWidgetsets,
+      target in compileWidgetsets, thisProject, enableCompileWidgetsets in resourceGenerators, state,
+      streams) map CompileWidgetsetsTask.compileWidgetsets,
     resourceGenerators in Compile <+= compileThemes,
     webappResources in Compile <+= (resourceManaged in Compile)(sd => sd / "webapp")
   )
