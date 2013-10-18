@@ -16,29 +16,6 @@ object VaadinPlugin extends Plugin with VaadinKeys {
   def addIfNotInArgs(args: Seq[String], param: String, value: String) =
     if (!args.contains(param)) Seq(param, value) else Nil
 
-  val compileWidgetsetsTask = compileWidgetsets <<= (dependencyClasspath in Compile, resourceDirectories in Compile,
-    widgetsets in compileWidgetsets, options in compileWidgetsets, javaOptions in compileWidgetsets,
-    target in compileWidgetsets, thisProject, enableCompileWidgetsets, state,
-    streams) map CompileWidgetsetsTask.compileWidgetsets
-
-  val devModeTask = devMode <<= (dependencyClasspath in Compile, resourceDirectories in Compile, widgetsets in devMode,
-    options in devMode, javaOptions in devMode, target in devMode, state, streams) map {
-      (fullCp, resources, widgetsets, args, jvmArgs, target, state, s) =>
-        implicit val log = s.log
-
-        val cmdArgs = Seq("-noserver") ++
-          addIfNotInArgs(args, "-war", target absolutePath) ++
-          addIfNotInArgs(args, "-startupUrl", "http://localhost:8080") ++ args
-
-        forkWidgetsetCmd(
-          jvmArgs,
-          getClassPath(state, fullCp),
-          "com.google.gwt.dev.DevMode",
-          cmdArgs,
-          widgetsets,
-          resources)
-    }
-
   val superDevModeTask = superDevMode <<= (dependencyClasspath in Compile, unmanagedSourceDirectories in Compile,
     resourceDirectories in Compile, widgetsets in superDevMode, options in superDevMode, javaOptions in superDevMode,
     target, state, streams) map { (fullCp, sources, resources, widgetsets, args, jvmArgs, target, state, s) =>
@@ -117,14 +94,14 @@ object VaadinPlugin extends Plugin with VaadinKeys {
 
   val vaadinSettings = Seq(
 
-    compileWidgetsetsTask,
+    compileWidgetsets <<= CompileWidgetsetsTask.compileWidgetsets1,
     widgetsets := Nil,
     enableCompileWidgetsets := true,
     target in compileWidgetsets := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "widgetsets",
     options in compileWidgetsets := Nil,
     javaOptions in compileWidgetsets := Nil,
 
-    devModeTask,
+    devMode <<= DevModeTask.devModeTask,
     widgetsets in devMode := (widgetsets in compileWidgetsets).value,
     target in devMode := (target in compileWidgetsets).value,
     options in devMode := Nil,
@@ -176,7 +153,7 @@ object VaadinPlugin extends Plugin with VaadinKeys {
     resourceGenerators in Compile <+= (dependencyClasspath in Compile, resourceDirectories in Compile,
       widgetsets in compileWidgetsets, options in compileWidgetsets, javaOptions in compileWidgetsets,
       target in compileWidgetsets, thisProject, enableCompileWidgetsets in resourceGenerators, state,
-      streams) map CompileWidgetsetsTask.compileWidgetsets,
+      streams) map CompileWidgetsetsTask.widgetsetCompiler,
     resourceGenerators in Compile <+= compileThemes,
     webappResources in Compile <+= (resourceManaged in Compile)(sd => sd / "webapp")
   )
