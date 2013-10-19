@@ -147,10 +147,7 @@ object VaadinPlugin extends Plugin with VaadinKeys {
   )
 
   val vaadinWebSettings = vaadinSettings ++ webSettings ++ Seq(
-    resourceGenerators in Compile <+= (dependencyClasspath in Compile, resourceDirectories in Compile,
-      vaadinWidgetsets in compileVaadinWidgetsets, vaadinOptions in compileVaadinWidgetsets, javaOptions in compileVaadinWidgetsets,
-      target in compileVaadinWidgetsets, thisProject, enableCompileVaadinWidgetsets in resourceGenerators, state,
-      streams) map CompileWidgetsetsTask.widgetsetCompiler,
+    resourceGenerators in Compile <+= CompileWidgetsetsTask.compileWidgetsetsInResourceGeneratorsTask,
     resourceGenerators in Compile <+= compileVaadinThemes,
     webappResources in Compile <+= (resourceManaged in Compile)(sd => sd / "webapp")
   )

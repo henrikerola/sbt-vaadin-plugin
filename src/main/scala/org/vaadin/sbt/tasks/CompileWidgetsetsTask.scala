@@ -17,6 +17,11 @@ object CompileWidgetsetsTask {
     javaOptions in compileVaadinWidgetsets, target in compileVaadinWidgetsets, thisProject, enableCompileVaadinWidgetsets,
     state, streams) map widgetsetCompiler
 
+  val compileWidgetsetsInResourceGeneratorsTask: Def.Initialize[Task[Seq[File]]] = (dependencyClasspath in Compile,
+    resourceDirectories in Compile, vaadinWidgetsets in compileVaadinWidgetsets, vaadinOptions in compileVaadinWidgetsets,
+    javaOptions in compileVaadinWidgetsets, target in compileVaadinWidgetsets, thisProject,
+    enableCompileVaadinWidgetsets in resourceGenerators, state, streams) map CompileWidgetsetsTask.widgetsetCompiler
+
   private def addIfNotInArgs(args: Seq[String], param: String, value: String) =
     if (!args.contains(param)) Seq(param, value) else Nil
 
