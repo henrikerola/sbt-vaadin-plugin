@@ -4,7 +4,7 @@ import sbt._
 import sbt.Keys._
 import org.vaadin.sbt.util.ForkUtil._
 import org.vaadin.sbt.util.ProjectUtil._
-import org.vaadin.sbt.VaadinPlugin._
+import org.vaadin.sbt.VaadinPlugin.{ vaadinOptions, vaadinSuperDevMode, vaadinWidgetsets }
 
 /**
  * @author Henri Kerola / Vaadin
