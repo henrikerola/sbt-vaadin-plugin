@@ -13,9 +13,6 @@ import org.vaadin.sbt.tasks._
 
 object VaadinPlugin extends Plugin with VaadinKeys {
 
-  def addIfNotInArgs(args: Seq[String], param: String, value: String) =
-    if (!args.contains(param)) Seq(param, value) else Nil
-
   val superDevModeTask = superDevMode <<= (dependencyClasspath in Compile, unmanagedSourceDirectories in Compile,
     resourceDirectories in Compile, widgetsets in superDevMode, options in superDevMode, javaOptions in superDevMode,
     target, state, streams) map { (fullCp, sources, resources, widgetsets, args, jvmArgs, target, state, s) =>

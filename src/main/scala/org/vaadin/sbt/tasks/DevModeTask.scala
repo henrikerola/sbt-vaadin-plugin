@@ -4,12 +4,15 @@ import sbt._
 import sbt.Keys._
 import org.vaadin.sbt.util.ForkUtil._
 import org.vaadin.sbt.util.ProjectUtil._
-import org.vaadin.sbt.VaadinPlugin._
+import org.vaadin.sbt.VaadinPlugin.{ devMode, options, widgetsets }
 
 /**
  * @author Henri Kerola / Vaadin
  */
 object DevModeTask {
+
+  private def addIfNotInArgs(args: Seq[String], param: String, value: String) =
+    if (!args.contains(param)) Seq(param, value) else Nil
 
   val devModeTask: Def.Initialize[Task[Unit]] = (dependencyClasspath in Compile, resourceDirectories in Compile,
     widgetsets in devMode, options in devMode, javaOptions in devMode, target in devMode, state, streams) map {
