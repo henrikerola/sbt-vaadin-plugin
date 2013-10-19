@@ -7,25 +7,10 @@ import java.util.jar.{ Attributes, Manifest }
 import com.earldouglas.xsbtwebplugin.WebPlugin.webSettings
 import com.earldouglas.xsbtwebplugin.PluginKeys.webappResources
 import java.io.File
-import org.vaadin.sbt.util.ProjectUtil._
 import org.vaadin.sbt.util.ForkUtil._
 import org.vaadin.sbt.tasks._
 
 object VaadinPlugin extends Plugin with VaadinKeys {
-
-  val superDevModeTask = vaadinSuperDevMode <<= (dependencyClasspath in Compile, unmanagedSourceDirectories in Compile,
-    resourceDirectories in Compile, vaadinWidgetsets in vaadinSuperDevMode, vaadinOptions in vaadinSuperDevMode, javaOptions in vaadinSuperDevMode,
-    target, state, streams) map { (fullCp, sources, resources, widgetsets, args, jvmArgs, target, state, s) =>
-      implicit val log = s.log
-
-      forkWidgetsetCmd(
-        jvmArgs,
-        getClassPath(state, fullCp),
-        "com.google.gwt.dev.codeserver.CodeServer",
-        args,
-        widgetsets,
-        resources)
-    }
 
   val compileThemesTask = compileVaadinThemes <<= (dependencyClasspath in Compile, vaadinThemesDir, vaadinThemes,
     target in compileVaadinThemes, streams) map { (dependencyCp, themesDir, themes, target, s) =>
@@ -104,7 +89,7 @@ object VaadinPlugin extends Plugin with VaadinKeys {
     vaadinOptions in vaadinDevMode := Nil,
     javaOptions in vaadinDevMode := (javaOptions in compileVaadinWidgetsets).value,
 
-    superDevModeTask,
+    vaadinDevMode <<= SuperDevModeTask.superDevModeTask,
     vaadinWidgetsets in vaadinSuperDevMode := (vaadinWidgetsets in compileVaadinWidgetsets).value,
     vaadinOptions in vaadinSuperDevMode := Nil,
     javaOptions in vaadinSuperDevMode := (javaOptions in compileVaadinWidgetsets).value,
