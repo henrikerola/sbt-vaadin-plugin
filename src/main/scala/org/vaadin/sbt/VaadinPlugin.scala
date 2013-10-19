@@ -13,8 +13,8 @@ import org.vaadin.sbt.tasks._
 
 object VaadinPlugin extends Plugin with VaadinKeys {
 
-  val superDevModeTask = superDevMode <<= (dependencyClasspath in Compile, unmanagedSourceDirectories in Compile,
-    resourceDirectories in Compile, widgetsets in superDevMode, options in superDevMode, javaOptions in superDevMode,
+  val superDevModeTask = vaadinSuperDevMode <<= (dependencyClasspath in Compile, unmanagedSourceDirectories in Compile,
+    resourceDirectories in Compile, vaadinWidgetsets in vaadinSuperDevMode, vaadinOptions in vaadinSuperDevMode, javaOptions in vaadinSuperDevMode,
     target, state, streams) map { (fullCp, sources, resources, widgetsets, args, jvmArgs, target, state, s) =>
       implicit val log = s.log
 
@@ -27,8 +27,8 @@ object VaadinPlugin extends Plugin with VaadinKeys {
         resources)
     }
 
-  val compileThemesTask = compileThemes <<= (dependencyClasspath in Compile, themesDir, themes,
-    target in compileThemes, streams) map { (dependencyCp, themesDir, themes, target, s) =>
+  val compileThemesTask = compileVaadinThemes <<= (dependencyClasspath in Compile, vaadinThemesDir, vaadinThemes,
+    target in compileVaadinThemes, streams) map { (dependencyCp, themesDir, themes, target, s) =>
       implicit val log = s.log
 
       val themeNames = if (themes.nonEmpty) {
@@ -71,8 +71,8 @@ object VaadinPlugin extends Plugin with VaadinKeys {
       generatedFiles.flatten
     }
 
-  val packageDirectoryZipTask = packageDirectoryZip <<= (baseDirectory, target, packageBin in Compile,
-    mappings in packageDirectoryZip, name in Compile, version in Compile) map {
+  val packageDirectoryZipTask = packageVaadinDirectoryZip <<= (baseDirectory, target, packageBin in Compile,
+    mappings in packageVaadinDirectoryZip, name in Compile, version in Compile) map {
       (base, target, addonBin, mappings, name, version) =>
         val manifest = new Manifest
         val mainAttributes = manifest.getMainAttributes
@@ -91,31 +91,31 @@ object VaadinPlugin extends Plugin with VaadinKeys {
 
   val vaadinSettings = Seq(
 
-    compileWidgetsets <<= CompileWidgetsetsTask.compileWidgetsets1,
-    widgetsets := Nil,
-    enableCompileWidgetsets := true,
-    target in compileWidgetsets := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "widgetsets",
-    options in compileWidgetsets := Nil,
-    javaOptions in compileWidgetsets := Nil,
+    compileVaadinWidgetsets <<= CompileWidgetsetsTask.compileWidgetsetsTask,
+    vaadinWidgetsets := Nil,
+    enableCompileVaadinWidgetsets := true,
+    target in compileVaadinWidgetsets := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "widgetsets",
+    vaadinOptions in compileVaadinWidgetsets := Nil,
+    javaOptions in compileVaadinWidgetsets := Nil,
 
-    devMode <<= DevModeTask.devModeTask,
-    widgetsets in devMode := (widgetsets in compileWidgetsets).value,
-    target in devMode := (target in compileWidgetsets).value,
-    options in devMode := Nil,
-    javaOptions in devMode := (javaOptions in compileWidgetsets).value,
+    vaadinDevMode <<= DevModeTask.devModeTask,
+    vaadinWidgetsets in vaadinDevMode := (vaadinWidgetsets in compileVaadinWidgetsets).value,
+    target in vaadinDevMode := (target in compileVaadinWidgetsets).value,
+    vaadinOptions in vaadinDevMode := Nil,
+    javaOptions in vaadinDevMode := (javaOptions in compileVaadinWidgetsets).value,
 
     superDevModeTask,
-    widgetsets in superDevMode := (widgetsets in compileWidgetsets).value,
-    options in superDevMode := Nil,
-    javaOptions in superDevMode := (javaOptions in compileWidgetsets).value,
+    vaadinWidgetsets in vaadinSuperDevMode := (vaadinWidgetsets in compileVaadinWidgetsets).value,
+    vaadinOptions in vaadinSuperDevMode := Nil,
+    javaOptions in vaadinSuperDevMode := (javaOptions in compileVaadinWidgetsets).value,
 
     compileThemesTask,
-    themes := Nil,
-    themesDir <<= sourceDirectory(sd => Seq(sd / "main" / "webapp" / "VAADIN" / "themes")),
-    target in compileThemes := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "themes",
+    vaadinThemes := Nil,
+    vaadinThemesDir <<= sourceDirectory(sd => Seq(sd / "main" / "webapp" / "VAADIN" / "themes")),
+    target in compileVaadinThemes := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "themes",
 
     packageDirectoryZipTask,
-    mappings in packageDirectoryZip <<= (packageBin in Compile, packageSrc in Compile, packageDoc in Compile) map {
+    mappings in packageVaadinDirectoryZip <<= (packageBin in Compile, packageSrc in Compile, packageDoc in Compile) map {
       (bin, src, doc) => Seq((bin, bin.name), (src, src.name), (doc, doc.name))
     }
 
@@ -125,8 +125,8 @@ object VaadinPlugin extends Plugin with VaadinKeys {
     packageOptions in (Compile, packageBin) += {
       val manifest = new Manifest
       val mainAttributes = manifest.getMainAttributes
-      val definedWidgetsets = (widgetsets in compileWidgetsets).value
-      val resources = (resourceDirectories in (Compile, widgetsets)).value
+      val definedWidgetsets = (vaadinWidgetsets in compileVaadinWidgetsets).value
+      val resources = (resourceDirectories in (Compile, vaadinWidgetsets)).value
       val widgetsetsValue = WidgetsetUtil.findWidgetsets(definedWidgetsets, resources).mkString(",")
 
       mainAttributes.putValue("Vaadin-Package-Version", "1")
@@ -148,10 +148,10 @@ object VaadinPlugin extends Plugin with VaadinKeys {
 
   val vaadinWebSettings = vaadinSettings ++ webSettings ++ Seq(
     resourceGenerators in Compile <+= (dependencyClasspath in Compile, resourceDirectories in Compile,
-      widgetsets in compileWidgetsets, options in compileWidgetsets, javaOptions in compileWidgetsets,
-      target in compileWidgetsets, thisProject, enableCompileWidgetsets in resourceGenerators, state,
+      vaadinWidgetsets in compileVaadinWidgetsets, vaadinOptions in compileVaadinWidgetsets, javaOptions in compileVaadinWidgetsets,
+      target in compileVaadinWidgetsets, thisProject, enableCompileVaadinWidgetsets in resourceGenerators, state,
       streams) map CompileWidgetsetsTask.widgetsetCompiler,
-    resourceGenerators in Compile <+= compileThemes,
+    resourceGenerators in Compile <+= compileVaadinThemes,
     webappResources in Compile <+= (resourceManaged in Compile)(sd => sd / "webapp")
   )
 

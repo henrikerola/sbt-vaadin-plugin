@@ -5,7 +5,7 @@ import sbt.Keys._
 import java.io.File
 import org.vaadin.sbt.util.ForkUtil._
 import org.vaadin.sbt.util.ProjectUtil._
-import org.vaadin.sbt.VaadinPlugin.{ compileWidgetsets, enableCompileWidgetsets, options, widgetsets }
+import org.vaadin.sbt.VaadinPlugin.{ compileVaadinWidgetsets, enableCompileVaadinWidgetsets, vaadinOptions, vaadinWidgetsets }
 
 /**
  * @author Henri Kerola / Vaadin
@@ -13,8 +13,8 @@ import org.vaadin.sbt.VaadinPlugin.{ compileWidgetsets, enableCompileWidgetsets,
 object CompileWidgetsetsTask {
 
   val compileWidgetsetsTask: Def.Initialize[Task[Seq[File]]] = (dependencyClasspath in Compile,
-    resourceDirectories in Compile, widgetsets in compileWidgetsets, options in compileWidgetsets,
-    javaOptions in compileWidgetsets, target in compileWidgetsets, thisProject, enableCompileWidgetsets,
+    resourceDirectories in Compile, vaadinWidgetsets in compileVaadinWidgetsets, vaadinOptions in compileVaadinWidgetsets,
+    javaOptions in compileVaadinWidgetsets, target in compileVaadinWidgetsets, thisProject, enableCompileVaadinWidgetsets,
     state, streams) map widgetsetCompiler
 
   private def addIfNotInArgs(args: Seq[String], param: String, value: String) =
