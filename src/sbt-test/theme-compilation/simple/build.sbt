@@ -1,6 +1,6 @@
 libraryDependencies ++= Seq(
-  "com.vaadin" % "vaadin-themes" % "7.1.6" % "provided",
-  "com.vaadin" % "vaadin-theme-compiler" % "7.1.6" % "provided"
+  "com.vaadin" % "vaadin-themes" % System.getProperty("vaadin.version") % "provided",
+  "com.vaadin" % "vaadin-theme-compiler" % System.getProperty("vaadin.version") % "provided"
 )
 
 vaadinSettings

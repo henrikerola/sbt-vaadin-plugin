@@ -22,3 +22,7 @@ addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.4.2")
 ScriptedPlugin.scriptedSettings
 
 scriptedBufferLog := false
+
+scriptedLaunchOpts := { scriptedLaunchOpts.value ++
+  Seq("-Dplugin.version=" + version.value, "-Dvaadin.version=7.1.7")
+}
