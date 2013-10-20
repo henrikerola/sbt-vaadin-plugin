@@ -12,6 +12,8 @@ Currently the plugin provides the following tasks:
  * `vaadinSuperDevMode` Run Super Dev Mode to recompile client-side code in a browser. Also debugging in the browser using source maps is possible.
  * `packageVaadinDirectoryZip` Creates a zip file that can be uploaded to Vaadin Directory.
 
+[![Build Status](https://travis-ci.org/henrikerola/sbt-vaadin-plugin.png?branch=master)](https://travis-ci.org/henrikerola/sbt-vaadin-plugin)
+
 ## Discussion
 
 Questions, problems or comments? [Vaadin Forum](https://vaadin.com/forum) is the place for discussion about the sbt-vaadin-plugin.
