@@ -6,11 +6,11 @@ The plugin has a dependency to the [xsbt-web-plugin](https://github.com/JamesEar
 
 Currently the plugin provides the following tasks:
 
- * `compileWidgetsets` Compiles Vaadin widgetsets into JavaScript.
- * `compileThemes` Compiles Vaadin SCSS themes into CSS.
- * `devMode` Run Development Mode to debug Vaadin client-side code and to avoid Java to JavaScript recompilation during development.
- * `superDevMode` Run Super Dev Mode to recompile client-side code in a browser. Also debugging in the browser using source maps is possible.
- * `packageDirectoryZip` Creates a zip file that can be uploaded to Vaadin Directory.
+ * `compileVaadinWidgetsets` Compiles Vaadin widgetsets into JavaScript.
+ * `compileVaadinThemes` Compiles Vaadin SCSS themes into CSS.
+ * `vaadinDevMode` Run Development Mode to debug Vaadin client-side code and to avoid Java to JavaScript recompilation during development.
+ * `vaadinSuperDevMode` Run Super Dev Mode to recompile client-side code in a browser. Also debugging in the browser using source maps is possible.
+ * `packageVaadinDirectoryZip` Creates a zip file that can be uploaded to Vaadin Directory.
 
 ## Discussion
 
@@ -43,76 +43,76 @@ The plugin doesn't add any Vaadin dependencies, those must be added explicitly t
 
 The task to compile Vaadin widgetsets is:
 
-    compileWidgetsets
+    compileVaadinWidgetsets
     
 This task compiles widgetsets defined in `widgetsets` into `target in compileWidgetsets`. If `widgetsets` is an empty list the task tries to find widgetsets from project's resource directories (`resourceDirectories in Compile`).
 
 Configuration examples:
 
-     widgetsets := Seq("com.example.MyWidgetset")
+     vaadinWidgetsets := Seq("com.example.MyWidgetset")
 
      // Widgetset compilation needs memory and to avoid an out of memory error it usually needs more memory:
-     javaOptions in compileWidgetsets := Seq("-Xss8M", "-Xmx512M", "-XX:MaxPermSize=512M")
+     javaOptions in compileVaadinWidgetsets := Seq("-Xss8M", "-Xmx512M", "-XX:MaxPermSize=512M")
      
-     options in compileWidgetsets := Seq("-logLevel", "DEBUG", "-strict")
+     vaadinOptions in compileVaadinWidgetsets := Seq("-logLevel", "DEBUG", "-strict")
      
      // Compile widgetsets into the source directory (by default themes are compiled into the target directory)
-     target in compileWidgetsets := (sourceDirectory in Compile).value / "webapp" / "VAADIN" / "widgetsets"
+     target in compileVaadinWidgetsets := (sourceDirectory in Compile).value / "webapp" / "VAADIN" / "widgetsets"
 
 ### Compiling themes
 
 Vaadin SCSS themes can be compiled into CSS by using a task called:
 
-    compileThemes
+    compileVaadinThemes
 
 This task compiles themes defined in `themes`. If `themes` is an empty list the task tries to find themes from folders defined in `themesDir`. Themes are compiled into folder defined by `target in compileThemes`.
 
 Configuration examples:
 
-    themes := Seq("mytheme")
+    vaadinThemes := Seq("mytheme")
 
     // Compile themes into the source directory (by default themes are compiled into the target directory)
-    target in compileThemes := (sourceDirectory in Compile).value / "webapp" / "VAADIN" / "themes"
+    target in compileVaadinThemes := (sourceDirectory in Compile).value / "webapp" / "VAADIN" / "themes"
 
 
 ### Development Mode
 
 Start Development Mode by saying:
 
-    devMode
+    vaadinDevMode
     
 
 Configuration examples:
 
 	// This makes possible to attach a remote debugger when development mode is started from the command line
-    javaOptions in devMode ++= Seq("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005")
+    javaOptions in vaadinDevMode ++= Seq("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005")
 
 
 ### SuperDevMode
 
 SuperDevMode Mode can be started by saying:
 
-    superDevMode
+    vaadinSuperDevMode
 
 
 ## Creating a Directory zip
 
 A Vaadin Directory compatible zip can be created by using a task called
 
-    packageDirectoryZip
+    packageVaadinDirectoryZip
 
 By default the task creates a zip file that contains a file `META-INF/MANIFEST.MF` and three jars (binary, sources and JavaDoc). The manifest contains definitions needed by Vaadin Directory (`Implementation-Title`, 
 `Implementation-Version`, `Vaadin-Package-Version` and `Vaadin-Addon`).
 
 It's possible to define files to be included into the zip. The following overrides the default, and two files are included into the zip (binary and sources jars):
 
-    mappings in packageDirectoryZip <<= (packageBin in Compile, packageSrc in Compile) map {
+    mappings in packageVaadinDirectoryZip <<= (packageBin in Compile, packageSrc in Compile) map {
       (bin, src) => Seq((bin, bin.name), (src, src.name))
     }
 
 This adds a file:
 
-    mappings in packageDirectoryZip <+= baseDirectory map { base =>
+    mappings in packageVaadinDirectoryZip <+= baseDirectory map { base =>
       (base / "LICENSE-2.0.txt") -> "LICENSE"
     }
 
