@@ -2,7 +2,6 @@ package org.vaadin.sbt.tasks
 
 import sbt._
 import sbt.Keys._
-import sbt.IO
 import java.io.File
 import org.vaadin.sbt.util.ForkUtil._
 import org.vaadin.sbt.VaadinPlugin.{ compileVaadinThemes, vaadinThemes, vaadinThemesDir }

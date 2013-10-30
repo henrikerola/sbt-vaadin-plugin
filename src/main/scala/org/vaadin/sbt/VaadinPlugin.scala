@@ -2,8 +2,6 @@ package org.vaadin.sbt
 
 import sbt._
 import sbt.Keys._
-import org.vaadin.sbt.util.WidgetsetUtil
-import java.util.jar.Manifest
 import com.earldouglas.xsbtwebplugin.WebPlugin.webSettings
 import com.earldouglas.xsbtwebplugin.PluginKeys.webappResources
 import org.vaadin.sbt.tasks._
@@ -36,6 +34,7 @@ object VaadinPlugin extends Plugin with VaadinKeys {
     target in compileVaadinThemes := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "themes",
 
     packageVaadinDirectoryZip <<= PackageDirectoryZipTask.packageDirectoryZipTask,
+    // Include binary, sources and javadoc jars into the zip file.
     mappings in packageVaadinDirectoryZip <<= (packageBin in Compile, packageSrc in Compile, packageDoc in Compile) map {
       (bin, src, doc) => Seq((bin, bin.name), (src, src.name), (doc, doc.name))
     }
@@ -43,22 +42,7 @@ object VaadinPlugin extends Plugin with VaadinKeys {
   )
 
   val vaadinAddOnSettings = vaadinSettings ++ Seq(
-    packageOptions in (Compile, packageBin) += {
-      val manifest = new Manifest
-      val mainAttributes = manifest.getMainAttributes
-      val definedWidgetsets = (vaadinWidgetsets in compileVaadinWidgetsets).value
-      val resources = (resourceDirectories in (Compile, vaadinWidgetsets)).value
-      val widgetsetsValue = WidgetsetUtil.findWidgetsets(definedWidgetsets, resources).mkString(",")
-
-      mainAttributes.putValue("Vaadin-Package-Version", "1")
-      mainAttributes.putValue("Implementation-Title", (name in Compile).value)
-      mainAttributes.putValue("Implementation-Version", (version in Compile).value)
-      if (widgetsetsValue != "") {
-        mainAttributes.putValue("Vaadin-Widgetsets", widgetsetsValue)
-      }
-
-      Package.JarManifest(manifest)
-    },
+    packageOptions in (Compile, packageBin) <+= AddOnJarManifestTask.addOnJarManifestTask,
 
     // Include source files into the binary jar file. Widgetset compiler needs those.
     mappings in (Compile, packageBin) <++= (unmanagedSources in Compile, unmanagedSourceDirectories in Compile,

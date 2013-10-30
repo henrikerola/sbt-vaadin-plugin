@@ -2,7 +2,6 @@ package org.vaadin.sbt.tasks
 
 import sbt._
 import sbt.Keys._
-import scala.Some
 import java.util.jar.{ Attributes, Manifest }
 import org.vaadin.sbt.VaadinPlugin.packageVaadinDirectoryZip
 
