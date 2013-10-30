@@ -1,0 +1,1 @@
+addSbtPlugin("org.vaadin.sbt" % "sbt-vaadin-plugin" % System.getProperty("plugin.version"))
