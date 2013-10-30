@@ -25,7 +25,7 @@ object VaadinPlugin extends Plugin with VaadinKeys {
     vaadinOptions in vaadinDevMode := Nil,
     javaOptions in vaadinDevMode := (javaOptions in compileVaadinWidgetsets).value,
 
-    vaadinDevMode <<= SuperDevModeTask.superDevModeTask,
+    vaadinSuperDevMode <<= SuperDevModeTask.superDevModeTask,
     vaadinWidgetsets in vaadinSuperDevMode := (vaadinWidgetsets in compileVaadinWidgetsets).value,
     vaadinOptions in vaadinSuperDevMode := Nil,
     javaOptions in vaadinSuperDevMode := (javaOptions in compileVaadinWidgetsets).value,
