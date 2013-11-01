@@ -2,7 +2,7 @@ name := "sbt-vaadin-plugin"
 
 description := "Vaadin Plugin for sbt"
 
-version := "0.1-SNAPSHOT"
+version := "1.0.0"
 
 organization := "org.vaadin.sbt"
 
@@ -16,6 +16,10 @@ scalariformSettings
 
 // sbt -Dsbt-vaadin-plugin.repository.path=../henrikerola.github.io/repository/releases publish
 publishTo := Some(Resolver.file("GitHub", file(Option(System.getProperty("sbt-vaadin-plugin.repository.path")).getOrElse("../henrikerola.github.io/repository/snapshots"))))
+
+vaadinSettings
+
+packageOptions in (Compile, packageBin) <+= org.vaadin.sbt.tasks.AddOnJarManifestTask.addOnJarManifestTask
 
 addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.4.2")
 
