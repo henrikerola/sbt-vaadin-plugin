@@ -16,15 +16,15 @@ Currently the plugin provides the following tasks:
 
 ## Discussion
 
-Questions, problems or comments? [Vaadin Forum](https://vaadin.com/forum) is the place for discussion about the sbt-vaadin-plugin.
+Questions, problems or comments? [Vaadin Forum](https://vaadin.com/forum) is the place for discussion about the sbt-vaadin-plugin. You can use the existing [Vaadin Plugin for sbt](https://vaadin.com/forum#!/thread/4320612) thread or create your own.
 
 ## Usage
 
 Define the plugin as a dependency to your project by adding the following lines into `project/plugins.sbt`:
 
-	resolvers += "sbt-vaadin-plugin repo" at "http://henrikerola.github.io/repository/snapshots"
+    resolvers += "sbt-vaadin-plugin repo" at "http://henrikerola.github.io/repository/releases"
 
-    addSbtPlugin("org.vaadin.sbt" % "sbt-vaadin-plugin" % "0.1-SNAPSHOT")
+    addSbtPlugin("org.vaadin.sbt" % "sbt-vaadin-plugin" % "1.0.0")
     
 After that you need to enabled the plugin on the projects you want to use it. This is done by including settings from `vaadinSettings`, `vaadinAddOnSettings` or `vaadinWebSettings`:
 
