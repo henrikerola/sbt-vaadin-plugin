@@ -27,4 +27,6 @@ private[sbt] trait VaadinKeys {
 
   val packageVaadinDirectoryZip = taskKey[Option[File]]("Creates a zip file that can be uploaded to Vaadin Directory.")
 
+  val vaadinAddonMappings = TaskKey[Seq[(File, String)]]("Defines the mappings from a addon jar file to a path used in 'packageVaadinDirectoryZip'. The paths are added to the 'Vaadin-Addon' entry in the zip's manifest.")
+
 }

@@ -34,11 +34,14 @@ object VaadinPlugin extends Plugin with VaadinKeys {
     target in compileVaadinThemes := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "themes",
 
     packageVaadinDirectoryZip <<= PackageDirectoryZipTask.packageDirectoryZipTask,
-    // Include binary, sources and javadoc jars into the zip file.
-    mappings in packageVaadinDirectoryZip <<= (packageBin in Compile, packageSrc in Compile, packageDoc in Compile) map {
-      (bin, src, doc) => Seq((bin, bin.name), (src, src.name), (doc, doc.name))
+    // Include binary jar into the zip file.
+    vaadinAddonMappings in packageVaadinDirectoryZip <<= (packageBin in Compile) map {
+      (bin) => Seq((bin, bin.name))
+    },
+    // Include sources and javadoc jars into the zip file.
+    mappings in packageVaadinDirectoryZip <<= (packageSrc in Compile, packageDoc in Compile) map {
+      (src, doc) => Seq((src, src.name), (doc, doc.name))
     }
-
   )
 
   val vaadinAddOnSettings = vaadinSettings ++ Seq(

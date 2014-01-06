@@ -3,16 +3,17 @@ package org.vaadin.sbt.tasks
 import sbt._
 import sbt.Keys._
 import java.util.jar.{ Attributes, Manifest }
-import org.vaadin.sbt.VaadinPlugin.packageVaadinDirectoryZip
+import org.vaadin.sbt.VaadinPlugin.{ packageVaadinDirectoryZip, vaadinAddonMappings }
 
 /**
  * @author Henri Kerola / Vaadin
  */
 object PackageDirectoryZipTask {
 
-  val packageDirectoryZipTask: Def.Initialize[Task[Option[File]]] = (baseDirectory, target, packageBin in Compile,
-    mappings in packageVaadinDirectoryZip, name in Compile, version in Compile) map {
-      (base, target, addonBin, mappings, name, version) =>
+  val packageDirectoryZipTask: Def.Initialize[Task[Option[File]]] = (baseDirectory, target,
+    vaadinAddonMappings in packageVaadinDirectoryZip, mappings in packageVaadinDirectoryZip, name in Compile,
+    version in Compile) map {
+      (base, target, addonMappings, mappings, name, version) =>
         val manifest = new Manifest
         val mainAttributes = manifest.getMainAttributes
         // Manifest-Version is needed, see: http://bugs.sun.com/view_bug.do?bug_id=4271239
@@ -20,10 +21,11 @@ object PackageDirectoryZipTask {
         mainAttributes.put(new Attributes.Name("Vaadin-Package-Version"), "1")
         mainAttributes.put(new Attributes.Name("Implementation-Title"), name)
         mainAttributes.put(new Attributes.Name("Implementation-Version"), version)
-        mainAttributes.put(new Attributes.Name("Vaadin-Addon"), addonBin.name)
+        mainAttributes.put(new Attributes.Name("Vaadin-Addon"), addonMappings.map(_._2).mkString(","))
 
-        val output = target / (addonBin.name.replace(".jar", ".zip"))
-        IO.jar(mappings, output, manifest)
+        // Expecting that the first element in the addonJars defines the name of the zip
+        val output = target / (addonMappings.head._2.replace(".jar", ".zip"))
+        IO.jar(addonMappings ++ mappings, output, manifest)
 
         Some(output)
     }
