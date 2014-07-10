@@ -24,12 +24,16 @@ object DevModeTask {
         addIfNotInArgs(args, "-war", target absolutePath) ++
         addIfNotInArgs(args, "-startupUrl", "http://localhost:8080") ++ args
 
-      forkWidgetsetCmd(
+      val result = forkWidgetsetCmd(
         jvmArgs,
         getClassPath(state, fullCp),
         "com.google.gwt.dev.DevMode",
         cmdArgs,
         widgetsets,
         resources)
+
+      for (error <- result.left) {
+        sys.error(error)
+      }
     }
 }

@@ -42,12 +42,16 @@ object CompileThemesTask {
 
           log.info("Compiling theme '%s'" format themeName)
 
-          forkJava(Nil, Seq(
+          val exitValue = forkJava(Nil, Seq(
             "-classpath", dependencyCp.map(_.data.absolutePath).mkString(File.pathSeparator),
             "com.vaadin.sass.SassCompiler",
             inputFile.absolutePath,
             outputFile.absolutePath
           ))
+
+          if (exitValue != 0) {
+            sys.error("Non-zero return code (%d) from com.vaadin.sass.SassCompiler" format (exitValue))
+          }
 
           Option(outputFile)
         }

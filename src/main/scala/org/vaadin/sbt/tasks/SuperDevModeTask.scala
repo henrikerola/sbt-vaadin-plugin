@@ -18,12 +18,16 @@ object SuperDevModeTask {
 
         implicit val log = s.log
 
-        forkWidgetsetCmd(
+        val result = forkWidgetsetCmd(
           jvmArgs,
           getClassPath(state, fullCp),
           "com.google.gwt.dev.codeserver.CodeServer",
           args,
           widgetsets,
           resources)
+
+        for (error <- result.left) {
+          sys.error(error)
+        }
     }
 }

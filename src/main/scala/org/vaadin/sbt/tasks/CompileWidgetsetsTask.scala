@@ -62,7 +62,7 @@ object CompileWidgetsetsTask {
         resources)
 
       exitValue match {
-        case Left(errorCode) => Nil
+        case Left(error) => sys.error(error)
         case Right(widgetsets) => {
           log.debug("Deleting %s" format target / "WEB-INF")
           IO.delete(target / "WEB-INF")

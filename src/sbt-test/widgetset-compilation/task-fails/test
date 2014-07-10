@@ -1,0 +1,5 @@
+# Testing that the task fails properly because of a missing dependency
+
+-> compileVaadinWidgetsets
+
+> contains target/streams/$global/compileVaadinWidgetsets/$global/streams/out "java.lang.RuntimeException: Non-zero return code (1) from com.vaadin.tools.WidgetsetCompiler"

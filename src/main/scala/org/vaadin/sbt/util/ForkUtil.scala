@@ -21,7 +21,7 @@ private[sbt] object ForkUtil {
     cmd: String,
     args: Seq[String],
     definedWidgetsets: Seq[String],
-    resources: Seq[File])(implicit log: Logger): Either[Int, Seq[String]] = {
+    resources: Seq[File])(implicit log: Logger): Either[String, Seq[String]] = {
 
     val widgetsets = if (definedWidgetsets.isEmpty) {
       log.debug("No widgetsets defined. Trying to find those from project's resource directory.")
@@ -43,7 +43,7 @@ private[sbt] object ForkUtil {
       if (exitValue == 0)
         Right(widgetsets)
       else
-        Left(exitValue)
+        Left("Non-zero return code (%d) from %s " format (exitValue, cmd))
     }
 
   }

@@ -1,0 +1,6 @@
+# Just testing that the task exists and fails properly because of a missing dependency
+# Not running the task with the missing dependency because it won't terminate automatically.
+
+-> vaadinDevMode
+
+> contains target/streams/$global/vaadinDevMode/$global/streams/out "java.lang.RuntimeException: Non-zero return code (1) from com.google.gwt.dev.DevMode"

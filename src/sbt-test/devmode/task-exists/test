@@ -1,4 +1,0 @@
-# Task does nothing because dependency to "vaadin-client-compiler" is missing. Just testing that the task exists.
-# Not running the task with the missing dependency because it won't terminate automatically.
-
-> vaadinDevMode
