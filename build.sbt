@@ -8,9 +8,9 @@ organization := "org.vaadin.sbt"
 
 sbtPlugin := true
 
-sbtVersion in Global := "0.13.0"
+sbtVersion in Global := "0.13.5"
 
-scalaVersion in Global := "2.10.2"
+scalaVersion in Global := "2.10.4"
 
 scalariformSettings
 
@@ -21,12 +21,12 @@ vaadinSettings
 
 packageOptions in (Compile, packageBin) <+= org.vaadin.sbt.tasks.AddOnJarManifestTask.addOnJarManifestTask
 
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.6.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.9.0")
 
 ScriptedPlugin.scriptedSettings
 
 scriptedBufferLog := false
 
 scriptedLaunchOpts := { scriptedLaunchOpts.value ++
-  Seq("-Dplugin.version=" + version.value, "-Dvaadin.version=7.1.9")
+  Seq("-Dplugin.version=" + version.value, "-Dvaadin.version=7.2.4")
 }
