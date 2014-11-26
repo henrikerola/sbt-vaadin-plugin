@@ -2,7 +2,7 @@ name := "sbt-vaadin-plugin"
 
 description := "Vaadin Plugin for sbt"
 
-version := "1.1-SNAPSHOT"
+version := "1.1.0"
 
 organization := "org.vaadin.sbt"
 
