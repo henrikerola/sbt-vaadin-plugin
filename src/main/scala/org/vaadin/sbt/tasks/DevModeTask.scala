@@ -14,26 +14,27 @@ object DevModeTask {
   private def addIfNotInArgs(args: Seq[String], param: String, value: String) =
     if (!args.contains(param)) Seq(param, value) else Nil
 
-  val devModeTask: Def.Initialize[Task[Unit]] = (dependencyClasspath in Compile, resourceDirectories in Compile,
-    vaadinWidgetsets in vaadinDevMode, vaadinOptions in vaadinDevMode, javaOptions in vaadinDevMode,
-    target in vaadinDevMode, state, streams) map { (fullCp, resources, widgetsets, args, jvmArgs, target, state, s) =>
+  val devModeTask: Def.Initialize[Task[Unit]] = (classDirectory in Compile, dependencyClasspath in Compile,
+    resourceDirectories in Compile, vaadinWidgetsets in vaadinDevMode, vaadinOptions in vaadinDevMode,
+    javaOptions in vaadinDevMode, target in vaadinDevMode, state, streams) map {
+      (classDir, fullCp, resources, widgetsets, args, jvmArgs, target, state, s) =>
 
-      implicit val log = s.log
+        implicit val log = s.log
 
-      val cmdArgs = Seq("-noserver") ++
-        addIfNotInArgs(args, "-war", target absolutePath) ++
-        addIfNotInArgs(args, "-startupUrl", "http://localhost:8080") ++ args
+        val cmdArgs = Seq("-noserver") ++
+          addIfNotInArgs(args, "-war", target absolutePath) ++
+          addIfNotInArgs(args, "-startupUrl", "http://localhost:8080") ++ args
 
-      val result = forkWidgetsetCmd(
-        jvmArgs,
-        getClassPath(state, fullCp),
-        "com.google.gwt.dev.DevMode",
-        cmdArgs,
-        widgetsets,
-        resources)
+        val result = forkWidgetsetCmd(
+          jvmArgs,
+          getClassPath(state, Seq(classDir) ++ fullCp.files),
+          "com.google.gwt.dev.DevMode",
+          cmdArgs,
+          widgetsets,
+          resources)
 
-      for (error <- result.left) {
-        sys.error(error)
-      }
+        for (error <- result.left) {
+          sys.error(error)
+        }
     }
 }

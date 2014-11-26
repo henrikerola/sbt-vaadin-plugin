@@ -11,20 +11,23 @@ import org.vaadin.sbt.VaadinPlugin.{ compileVaadinWidgetsets, enableCompileVaadi
  */
 object CompileWidgetsetsTask {
 
-  val compileWidgetsetsTask: Def.Initialize[Task[Seq[File]]] = (dependencyClasspath in Compile,
+  val compileWidgetsetsTask: Def.Initialize[Task[Seq[File]]] = (
+    classDirectory in Compile, dependencyClasspath in Compile,
     resourceDirectories in Compile, vaadinWidgetsets in compileVaadinWidgetsets, vaadinOptions in compileVaadinWidgetsets,
     javaOptions in compileVaadinWidgetsets, target in compileVaadinWidgetsets, thisProject, enableCompileVaadinWidgetsets,
     state, streams) map widgetsetCompiler
 
-  val compileWidgetsetsInResourceGeneratorsTask: Def.Initialize[Task[Seq[File]]] = (dependencyClasspath in Compile,
+  val compileWidgetsetsInResourceGeneratorsTask: Def.Initialize[Task[Seq[File]]] = (
+    classDirectory in Compile, dependencyClasspath in Compile,
     resourceDirectories in Compile, vaadinWidgetsets in compileVaadinWidgetsets, vaadinOptions in compileVaadinWidgetsets,
     javaOptions in compileVaadinWidgetsets, target in compileVaadinWidgetsets, thisProject,
-    enableCompileVaadinWidgetsets in resourceGenerators, state, streams) map CompileWidgetsetsTask.widgetsetCompiler
+    enableCompileVaadinWidgetsets in resourceGenerators, state, streams) map widgetsetCompiler
 
   private def addIfNotInArgs(args: Seq[String], param: String, value: String) =
     if (!args.contains(param)) Seq(param, value) else Nil
 
   def widgetsetCompiler(
+    classDir: File,
     fullCp: Classpath,
     resources: Seq[File],
     widgetsets: Seq[String],
@@ -55,7 +58,7 @@ object CompileWidgetsetsTask {
 
       val exitValue = forkWidgetsetCmd(
         jvmArgs,
-        getClassPath(state, fullCp),
+        getClassPath(state, Seq(classDir) ++ fullCp.files),
         "com.vaadin.tools.WidgetsetCompiler",
         cmdArgs,
         widgetsets,

@@ -31,8 +31,8 @@ private[sbt] object ProjectUtil {
     iter(Seq(currentRef))
   }
 
-  def getClassPath(state: State, fullCp: Seq[sbt.Attributed[java.io.File]]): Seq[String] = {
-    val cp = getSourceDirectoriesRecursively(state).map(_.absolutePath) ++ fullCp.files.map(_.absolutePath)
+  def getClassPath(state: State, fullCp: Seq[java.io.File]): Seq[String] = {
+    val cp = getSourceDirectoriesRecursively(state).map(_.absolutePath) ++ fullCp.map(_.absolutePath)
     // To make sure that GWT finds correct classes from classpath, sort entries containing "vaadin-client"
     // first to the list and then the rest.
     val (vaadinClient, rest) = cp partition { _ contains "vaadin-client" }

@@ -11,16 +11,16 @@ import org.vaadin.sbt.VaadinPlugin.{ vaadinOptions, vaadinSuperDevMode, vaadinWi
  */
 object SuperDevModeTask {
 
-  val superDevModeTask: Def.Initialize[Task[Unit]] = (dependencyClasspath in Compile, unmanagedSourceDirectories in Compile,
-    resourceDirectories in Compile, vaadinWidgetsets in vaadinSuperDevMode, vaadinOptions in vaadinSuperDevMode,
-    javaOptions in vaadinSuperDevMode, target, state, streams) map {
-      (fullCp, sources, resources, widgetsets, args, jvmArgs, target, state, s) =>
+  val superDevModeTask: Def.Initialize[Task[Unit]] = (classDirectory in Compile, dependencyClasspath in Compile,
+    unmanagedSourceDirectories in Compile, resourceDirectories in Compile, vaadinWidgetsets in vaadinSuperDevMode,
+    vaadinOptions in vaadinSuperDevMode, javaOptions in vaadinSuperDevMode, target, state, streams) map {
+      (classDir, fullCp, sources, resources, widgetsets, args, jvmArgs, target, state, s) =>
 
         implicit val log = s.log
 
         val result = forkWidgetsetCmd(
           jvmArgs,
-          getClassPath(state, fullCp),
+          getClassPath(state, Seq(classDir) ++ fullCp.files),
           "com.google.gwt.dev.codeserver.CodeServer",
           args,
           widgetsets,
