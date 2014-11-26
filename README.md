@@ -24,7 +24,7 @@ Define the plugin as a dependency to your project by adding the following lines 
 
     resolvers += "sbt-vaadin-plugin repo" at "http://henrikerola.github.io/repository/releases"
 
-    addSbtPlugin("org.vaadin.sbt" % "sbt-vaadin-plugin" % "1.0.0")
+    addSbtPlugin("org.vaadin.sbt" % "sbt-vaadin-plugin" % "1.1.0")
     
 After that you need to enabled the plugin on the projects you want to use it. This is done by including settings from `vaadinSettings`, `vaadinAddOnSettings` or `vaadinWebSettings`:
 
