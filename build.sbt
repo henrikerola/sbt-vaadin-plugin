@@ -2,7 +2,7 @@ name := "sbt-vaadin-plugin"
 
 description := "Vaadin Plugin for sbt"
 
-version := "1.1.0"
+version := "1.2.0"
 
 organization := "org.vaadin.sbt"
 
@@ -21,12 +21,13 @@ vaadinSettings
 
 packageOptions in (Compile, packageBin) <+= org.vaadin.sbt.tasks.AddOnJarManifestTask.addOnJarManifestTask
 
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.9.0")
+//addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.9.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0")
 
 ScriptedPlugin.scriptedSettings
 
 scriptedBufferLog := false
 
 scriptedLaunchOpts := { scriptedLaunchOpts.value ++
-  Seq("-Dplugin.version=" + version.value, "-Dvaadin.version=7.3.5")
+  Seq("-Dplugin.version=" + version.value, "-Dvaadin.version=7.4.0")
 }

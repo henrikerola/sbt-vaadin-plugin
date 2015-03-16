@@ -2,8 +2,8 @@ package org.vaadin.sbt
 
 import sbt._
 import sbt.Keys._
-import com.earldouglas.xsbtwebplugin.WebPlugin.webSettings
-import com.earldouglas.xsbtwebplugin.PluginKeys.webappResources
+//import com.earldouglas.xsbtwebplugin.WebPlugin.webSettings
+//import com.earldouglas.xsbtwebplugin.PluginKeys.webappResources
 import org.vaadin.sbt.tasks._
 
 object VaadinPlugin extends Plugin with VaadinKeys {
@@ -54,10 +54,15 @@ object VaadinPlugin extends Plugin with VaadinKeys {
       }
   )
 
-  val vaadinWebSettings = vaadinSettings ++ webSettings ++ Seq(
+  val vaadinWebSettings = vaadinSettings /*++ webSettings*/ ++ Seq(
     resourceGenerators in Compile <+= CompileWidgetsetsTask.compileWidgetsetsInResourceGeneratorsTask,
     resourceGenerators in Compile <+= compileVaadinThemes,
-    webappResources in Compile <+= (resourceManaged in Compile)(sd => sd / "webapp")
+    //    webappResources in Compile <+= (resourceManaged in Compile)(sd => sd / "webapp"), // Does not compile
+    // do not know how to replace the string above. to make everything work by default, adding the following
+    // rows works fine
+    // by default new xsbt webplugin does not pick it from the target directory
+    target in compileVaadinThemes := (sourceDirectory in Compile).value / "webapp" / "VAADIN" / "themes",
+    target in compileVaadinWidgetsets := (sourceDirectory in Compile).value / "webapp" / "VAADIN" / "widgetsets"
   )
 
 }
