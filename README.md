@@ -24,13 +24,13 @@ Define the plugin as a dependency to your project by adding the following lines 
 
     resolvers += "sbt-vaadin-plugin repo" at "http://henrikerola.github.io/repository/releases"
 
-    addSbtPlugin("org.vaadin.sbt" % "sbt-vaadin-plugin" % "1.1.0")
+    addSbtPlugin("org.vaadin.sbt" % "sbt-vaadin-plugin" % "1.2.0")
     
 After that you need to enabled the plugin on the projects you want to use it. This is done by including settings from `vaadinSettings`, `vaadinAddOnSettings` or `vaadinWebSettings`:
 
  * `vaadinSettings` contains all settings and tasks provided by the plugin.
  * `vaadinAddOnSettings` is an extension to `vaadinSettings` and it's suitable for projects that produce a Vaadin add-on jar.
- * `vaadinWebSettings` contains settings from `vaadinSettings` and [xsbt-web-plugin](https://github.com/JamesEarlDouglas/xsbt-web-plugin)'s `webSettings`.
+ * `vaadinWebSettings` contains settings from `vaadinSettings` and setup of resource generators (themes and widgetsets).
 
 
 The plugin doesn't add any Vaadin dependencies, those must be added explicitly to the projects using the plugin.
