@@ -11,7 +11,6 @@ object VaadinPlugin extends Plugin with VaadinKeys {
     compileVaadinWidgetsets <<= CompileWidgetsetsTask.compileWidgetsetsTask,
     vaadinWidgetsets := Nil,
     enableCompileVaadinWidgetsets := true,
-    // target in compileVaadinWidgetsets := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "widgetsets",
     // TODO: refactor to use a value from 'webappDest in webapp')
     target in compileVaadinWidgetsets := (target in Compile).value / "webapp" / "VAADIN" / "widgetsets",
     vaadinOptions in compileVaadinWidgetsets := Nil,
@@ -31,7 +30,6 @@ object VaadinPlugin extends Plugin with VaadinKeys {
     compileVaadinThemes <<= CompileThemesTask.compileThemesTask,
     vaadinThemes := Nil,
     vaadinThemesDir <<= sourceDirectory(sd => Seq(sd / "main" / "webapp" / "VAADIN" / "themes")),
-    // target in compileVaadinThemes := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "themes",
     // TODO: refactor to use a value from 'webappDest in webapp')
     target in compileVaadinThemes := (target in Compile).value / "webapp" / "VAADIN" / "themes",
 
@@ -59,7 +57,6 @@ object VaadinPlugin extends Plugin with VaadinKeys {
   val vaadinWebSettings = vaadinSettings /*++ webSettings*/ ++ Seq(
     resourceGenerators in Compile <+= CompileWidgetsetsTask.compileWidgetsetsInResourceGeneratorsTask,
     resourceGenerators in Compile <+= compileVaadinThemes
-  //    webappResources in Compile <+= (resourceManaged in Compile)(sd => sd / "webapp"), // Does not compile
   )
 
 }
