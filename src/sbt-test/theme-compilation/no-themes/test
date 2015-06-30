@@ -1,4 +1,4 @@
 > compileVaadinThemes
 
 # compileVaadinThemes should generate the themes folder even there is no themes to compile
-$ exists target/scala-2.10/resource_managed/main/webapp/VAADIN/themes/
+$ exists target/webapp/VAADIN/themes/

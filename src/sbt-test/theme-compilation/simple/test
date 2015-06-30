@@ -1,6 +1,6 @@
 > compileVaadinThemes
 
-$ exists target/scala-2.10/resource_managed/main/webapp/VAADIN/themes/mytheme1/styles.css
+$ exists target/webapp/VAADIN/themes/mytheme1/styles.css
 
 # Folder inside webapp/VAADIN/themes without styles.scss should not generate a folder to target
-$ absent target/scala-2.10/resource_managed/main/webapp/VAADIN/themes/mytheme2
+$ absent target/webapp/VAADIN/themes/mytheme2

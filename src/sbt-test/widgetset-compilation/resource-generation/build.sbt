@@ -1,6 +1,5 @@
 libraryDependencies ++= Seq(
-  "com.vaadin" % "vaadin-client-compiler" % System.getProperty("vaadin.version") % "provided",
-  "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
+  "com.vaadin" % "vaadin-client-compiler" % System.getProperty("vaadin.version") % "provided"
 )
 
 vaadinWebSettings
