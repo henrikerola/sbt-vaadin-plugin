@@ -8,9 +8,9 @@ organization := "org.vaadin.sbt"
 
 sbtPlugin := true
 
-sbtVersion in Global := "0.13.7"
+sbtVersion in Global := "0.13.8"
 
-scalaVersion in Global := "2.10.4"
+scalaVersion in Global := "2.10.5"
 
 scalariformSettings
 
