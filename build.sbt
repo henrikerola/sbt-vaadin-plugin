@@ -21,8 +21,7 @@ vaadinSettings
 
 packageOptions in (Compile, packageBin) <+= org.vaadin.sbt.tasks.AddOnJarManifestTask.addOnJarManifestTask
 
-//addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.9.0")
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.1.1")
 
 ScriptedPlugin.scriptedSettings
 
