@@ -2,8 +2,6 @@ package org.vaadin.sbt
 
 import sbt._
 import sbt.Keys._
-import com.earldouglas.xsbtwebplugin.WebPlugin.webSettings
-import com.earldouglas.xsbtwebplugin.PluginKeys.webappResources
 import org.vaadin.sbt.tasks._
 
 object VaadinPlugin extends Plugin with VaadinKeys {
@@ -13,7 +11,8 @@ object VaadinPlugin extends Plugin with VaadinKeys {
     compileVaadinWidgetsets <<= CompileWidgetsetsTask.compileWidgetsetsTask,
     vaadinWidgetsets := Nil,
     enableCompileVaadinWidgetsets := true,
-    target in compileVaadinWidgetsets := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "widgetsets",
+    // TODO: refactor to use a value from 'webappDest in webapp')
+    target in compileVaadinWidgetsets := (target in Compile).value / "webapp" / "VAADIN" / "widgetsets",
     vaadinOptions in compileVaadinWidgetsets := Nil,
     javaOptions in compileVaadinWidgetsets := Nil,
 
@@ -31,7 +30,8 @@ object VaadinPlugin extends Plugin with VaadinKeys {
     compileVaadinThemes <<= CompileThemesTask.compileThemesTask,
     vaadinThemes := Nil,
     vaadinThemesDir <<= sourceDirectory(sd => Seq(sd / "main" / "webapp" / "VAADIN" / "themes")),
-    target in compileVaadinThemes := (resourceManaged in Compile).value / "webapp" / "VAADIN" / "themes",
+    // TODO: refactor to use a value from 'webappDest in webapp')
+    target in compileVaadinThemes := (target in Compile).value / "webapp" / "VAADIN" / "themes",
 
     packageVaadinDirectoryZip <<= PackageDirectoryZipTask.packageDirectoryZipTask,
     // Include binary jar into the zip file.
@@ -54,10 +54,9 @@ object VaadinPlugin extends Plugin with VaadinKeys {
       }
   )
 
-  val vaadinWebSettings = vaadinSettings ++ webSettings ++ Seq(
+  val vaadinWebSettings = vaadinSettings /*++ webSettings*/ ++ Seq(
     resourceGenerators in Compile <+= CompileWidgetsetsTask.compileWidgetsetsInResourceGeneratorsTask,
-    resourceGenerators in Compile <+= compileVaadinThemes,
-    webappResources in Compile <+= (resourceManaged in Compile)(sd => sd / "webapp")
+    resourceGenerators in Compile <+= compileVaadinThemes
   )
 
 }
