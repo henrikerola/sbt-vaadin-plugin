@@ -34,7 +34,7 @@ private[sbt] object ForkUtil {
     }
 
     if (widgetsets.isEmpty) {
-      log.warn("No widgetsets defined or found. Nothing to to.")
+      log.warn("No widgetsets defined or found. Nothing to do.")
       Right(Nil)
     } else {
       val forkArgs = Seq("-classpath", classPath.mkString(File.pathSeparator), cmd) ++ args ++ widgetsets
