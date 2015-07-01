@@ -21,8 +21,6 @@ vaadinSettings
 
 packageOptions in (Compile, packageBin) <+= org.vaadin.sbt.tasks.AddOnJarManifestTask.addOnJarManifestTask
 
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.1.1")
-
 ScriptedPlugin.scriptedSettings
 
 scriptedBufferLog := false
