@@ -4,7 +4,7 @@ import sbt._
 import sbt.Keys._
 import org.vaadin.sbt.util.ForkUtil._
 import org.vaadin.sbt.util.ProjectUtil._
-import org.vaadin.sbt.VaadinPlugin.{ compileVaadinWidgetsets, enableCompileVaadinWidgetsets, vaadinOptions, vaadinWidgetsets }
+import org.vaadin.sbt.VaadinPlugin.{ compileVaadinWidgetsets, vaadinOptions, vaadinWidgetsets }
 
 /**
  * @author Henri Kerola / Vaadin
@@ -14,14 +14,15 @@ object CompileWidgetsetsTask {
   val compileWidgetsetsTask: Def.Initialize[Task[Seq[File]]] = (
     classDirectory in Compile, dependencyClasspath in Compile,
     resourceDirectories in Compile, vaadinWidgetsets in compileVaadinWidgetsets, vaadinOptions in compileVaadinWidgetsets,
-    javaOptions in compileVaadinWidgetsets, target in compileVaadinWidgetsets, thisProject, enableCompileVaadinWidgetsets,
+    javaOptions in compileVaadinWidgetsets, target in compileVaadinWidgetsets, thisProject, skip in compileVaadinWidgetsets,
     state, streams) map widgetsetCompiler
 
   val compileWidgetsetsInResourceGeneratorsTask: Def.Initialize[Task[Seq[File]]] = (
     classDirectory in Compile, dependencyClasspath in Compile,
     resourceDirectories in Compile, vaadinWidgetsets in compileVaadinWidgetsets, vaadinOptions in compileVaadinWidgetsets,
     javaOptions in compileVaadinWidgetsets, target in compileVaadinWidgetsets, thisProject,
-    enableCompileVaadinWidgetsets in resourceGenerators, state, streams) map widgetsetCompiler
+    skip in compileVaadinWidgetsets in resourceGenerators,
+    state, streams) map widgetsetCompiler
 
   private def addIfNotInArgs(args: Seq[String], param: String, value: String) =
     if (!args.contains(param)) Seq(param, value) else Nil
@@ -35,14 +36,14 @@ object CompileWidgetsetsTask {
     jvmArguments: Seq[String],
     target: File,
     p: ResolvedProject,
-    enabled: Boolean,
+    skip: Boolean,
     state: State,
     s: TaskStreams): Seq[File] = {
 
     implicit val log = s.log
 
-    if (!enabled) {
-      log.info("Widgetset compilation disabled.")
+    if (skip) {
+      log.info("Skipping Widgetset compilation.")
       Seq[File]()
     } else {
 

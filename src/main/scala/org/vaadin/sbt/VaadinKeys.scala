@@ -13,8 +13,6 @@ private[sbt] trait VaadinKeys {
 
   val vaadinWidgetsets = settingKey[Seq[String]]("List of widgetset names to be compiled with the widgetset compiler.")
 
-  val enableCompileVaadinWidgetsets = settingKey[Boolean]("If false, the compileWidgetsets task does nothing.")
-
   val compileVaadinThemes = taskKey[Seq[File]]("Compiles Vaadin SCSS themes into CSS.")
 
   val vaadinThemes = settingKey[Seq[String]]("List of theme names to be compiled with the Vaadin SCSS compiler.")

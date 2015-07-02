@@ -10,7 +10,6 @@ object VaadinPlugin extends Plugin with VaadinKeys {
 
     compileVaadinWidgetsets <<= CompileWidgetsetsTask.compileWidgetsetsTask,
     vaadinWidgetsets := Nil,
-    enableCompileVaadinWidgetsets := true,
     // TODO: refactor to use a value from 'webappDest in webapp')
     target in compileVaadinWidgetsets := (target in Compile).value / "webapp" / "VAADIN" / "widgetsets",
     vaadinOptions in compileVaadinWidgetsets := Nil,

@@ -1,3 +1,3 @@
 vaadinWebSettings
 
-enableCompileVaadinWidgetsets in resourceGenerators := false
+skip in compileVaadinWidgetsets in resourceGenerators := true
