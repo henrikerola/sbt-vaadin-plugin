@@ -1,3 +1,3 @@
 > compileVaadinThemes
 
-$ exists target/scala-2.10/resource_managed/main/webapp/VAADIN/themes/mytheme1/styles.css
+$ exists target/webapp/VAADIN/themes/mytheme1/styles.css
