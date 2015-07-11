@@ -1,6 +1,6 @@
 # sbt-vaadin-plugin
 
-sbt-vaadin-plugin is a SBT plugin that makes possible to use SBT to build Vaadin projects. The plugin is for Vaadin 7 and SBT 0.13.
+sbt-vaadin-plugin is a [sbt](http://www.scala-sbt.org/) plugin that makes possible to use sbt to build Vaadin projects. The plugin is for Vaadin 7 and sbt 0.13.
 
 Starting from the version 1.2.0, sbt-vaadin-plugin **doesn't** depend on the [xsbt-web-plugin](https://github.com/JamesEarlDouglas/xsbt-web-plugin) anymore.
 
