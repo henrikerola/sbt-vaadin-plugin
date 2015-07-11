@@ -37,7 +37,7 @@ The plugin doesn't add any Vaadin dependencies, those must be added explicitly t
 
 ### Examples
 
- * A multi-module Vaadin Java add-on project: [PopupButton](https://github.com/henrikerola/PopupButton/tree/2.3)
+ * A multi-module Vaadin Java add-on project: [PopupButton](https://github.com/henrikerola/PopupButton)
  * A simple Scaladin application: [Scaladin chat](https://github.com/henrikerola/scaladin-chat/tree/scaladin-3.0)
 
 
