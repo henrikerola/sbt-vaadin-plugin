@@ -33,7 +33,7 @@ After that you need to enabled the plugin on the projects you want to use it. Th
  * `vaadinWebSettings` contains settings from `vaadinSettings` and setup of resource generators (themes and widgetsets).
 
 
-The plugin doesn't add any Vaadin dependencies, those must be added explicitly to the projects using the plugin.
+The plugin doesn't add any Vaadin dependencies, those must be added explicitly to the projects using the plugin. Usually you want to use sbt-vaadin-plugin with [xsbt-web-plugin](https://github.com/JamesEarlDouglas/xsbt-web-plugin).
 
 ### Examples
 
