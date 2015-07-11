@@ -26,5 +26,5 @@ ScriptedPlugin.scriptedSettings
 scriptedBufferLog := false
 
 scriptedLaunchOpts := { scriptedLaunchOpts.value ++
-  Seq("-Dplugin.version=" + version.value, "-Dvaadin.version=7.5.0")
+  Seq("-Dplugin.version=" + version.value, "-Dvaadin.version=7.5.1")
 }
