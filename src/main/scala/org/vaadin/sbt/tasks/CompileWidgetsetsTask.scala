@@ -1,8 +1,8 @@
 package org.vaadin.sbt.tasks
 
-import _root_.java.io.{FileNotFoundException, IOException}
+import _root_.java.io.{ FileNotFoundException, IOException }
 
-import org.vaadin.sbt.VaadinPlugin.{compileVaadinWidgetsets, vaadinOptions, vaadinWidgetsets}
+import org.vaadin.sbt.VaadinPlugin.{ compileVaadinWidgetsets, vaadinOptions, vaadinWidgetsets }
 import org.vaadin.sbt.util.ForkUtil._
 import org.vaadin.sbt.util.ProjectUtil._
 import sbt.Keys._
@@ -86,9 +86,7 @@ object CompileWidgetsetsTask {
       } finally {
         log.debug(s"Deleting persistent unit cache dir ${tmpDir.absolutePath}")
         try {
-          if (!deleteRecursive(tmpDir)) {
-            log.warn(s"Deleting ${tmpDir.absolutePath} failed")
-          }
+          deleteRecursive(tmpDir)
         } catch {
           case e: IOException => log.warn(s"Deleting ${tmpDir.absolutePath} failed with msg ${e.getLocalizedMessage}")
         }
@@ -96,14 +94,16 @@ object CompileWidgetsetsTask {
     }
   }
 
-  private def deleteRecursive(path: File): Boolean = {
-    if (!path.exists()) throw new FileNotFoundException(path.getAbsolutePath)
-    var ret = true
-    if (path.isDirectory) {
-      for (f <- path.listFiles()) {
-        ret = ret && deleteRecursive(f)
-      }
+  private def deleteRecursive(path: File): Unit = {
+    if (!path.exists()) {
+      throw new FileNotFoundException(path.getAbsolutePath)
     }
-    ret && path.delete()
+
+    if (path.isDirectory) {
+      path.listFiles() foreach deleteRecursive
+    }
+    if (!path.delete()) {
+      throw new IOException(s"Could not delete ${path.absolutePath}")
+    }
   }
 }
