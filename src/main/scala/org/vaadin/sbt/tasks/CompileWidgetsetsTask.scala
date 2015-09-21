@@ -67,11 +67,11 @@ object CompileWidgetsetsTask {
 
       exitValue match {
         case Left(error) => sys.error(error)
-        case Right(widgetsets) => {
+        case Right(curWS) => {
           log.debug("Deleting %s" format target / "WEB-INF")
           IO.delete(target / "WEB-INF")
 
-          val generatedFiles: Seq[Seq[File]] = widgetsets map {
+          val generatedFiles: Seq[Seq[File]] = curWS map {
             widgetset => (target / widgetset ** ("*")).get
           }
 
