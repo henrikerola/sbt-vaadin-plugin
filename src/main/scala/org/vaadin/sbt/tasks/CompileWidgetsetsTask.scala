@@ -1,10 +1,12 @@
 package org.vaadin.sbt.tasks
 
-import sbt._
-import sbt.Keys._
+import _root_.java.io.{ FileNotFoundException, IOException }
+
+import org.vaadin.sbt.VaadinPlugin.{ compileVaadinWidgetsets, vaadinOptions, vaadinWidgetsets }
 import org.vaadin.sbt.util.ForkUtil._
 import org.vaadin.sbt.util.ProjectUtil._
-import org.vaadin.sbt.VaadinPlugin.{ compileVaadinWidgetsets, vaadinOptions, vaadinWidgetsets }
+import sbt.Keys._
+import sbt._
 
 /**
  * @author Henri Kerola / Vaadin
@@ -49,38 +51,59 @@ object CompileWidgetsetsTask {
 
       IO.createDirectory(target)
 
-      val tmpDir = IO.createTemporaryDirectory
+      val tmpDir: File = IO.createTemporaryDirectory
 
-      val jvmArgs = Seq("-Dgwt.persistentunitcachedir=" + tmpDir.absolutePath) ++ jvmArguments
+      try {
+        val jvmArgs = Seq("-Dgwt.persistentunitcachedir=" + tmpDir.absolutePath) ++ jvmArguments
 
-      val cmdArgs = Seq("-war", target absolutePath) ++
-        addIfNotInArgs(args, "-extra", tmpDir absolutePath) ++
-        addIfNotInArgs(args, "-deploy", tmpDir absolutePath) ++ args
+        val cmdArgs = Seq("-war", target absolutePath) ++
+          addIfNotInArgs(args, "-extra", tmpDir absolutePath) ++
+          addIfNotInArgs(args, "-deploy", tmpDir absolutePath) ++ args
 
-      val exitValue = forkWidgetsetCmd(
-        jvmArgs,
-        getClassPath(state, Seq(classDir) ++ fullCp.files),
-        "com.vaadin.tools.WidgetsetCompiler",
-        cmdArgs,
-        widgetsets,
-        resources)
+        val exitValue = forkWidgetsetCmd(
+          jvmArgs,
+          getClassPath(state, Seq(classDir) ++ fullCp.files),
+          "com.vaadin.tools.WidgetsetCompiler",
+          cmdArgs,
+          widgetsets,
+          resources)
 
-      exitValue match {
-        case Left(error) => sys.error(error)
-        case Right(widgetsets) => {
-          log.debug("Deleting %s" format target / "WEB-INF")
-          IO.delete(target / "WEB-INF")
+        exitValue match {
+          case Left(error) => sys.error(error)
+          case Right(curWS) => {
+            log.debug("Deleting %s" format target / "WEB-INF")
+            IO.delete(target / "WEB-INF")
 
-          val generatedFiles: Seq[Seq[File]] = widgetsets map {
-            widgetset => (target / widgetset ** ("*")).get
+            val generatedFiles: Seq[Seq[File]] = curWS map {
+              widgetset => (target / widgetset ** ("*")).get
+            }
+
+            log.debug("Generated files: %s".format(generatedFiles.flatten.mkString(", ")))
+
+            generatedFiles flatten
           }
-
-          log.debug("Generated files: %s".format(generatedFiles.flatten.mkString(", ")))
-
-          generatedFiles flatten
+        }
+      } finally {
+        log.debug(s"Deleting persistent unit cache dir ${tmpDir.absolutePath}")
+        try {
+          deleteRecursive(tmpDir)
+        } catch {
+          case e: IOException => log.warn(s"Deleting ${tmpDir.absolutePath} failed with msg ${e.getLocalizedMessage}")
         }
       }
     }
   }
 
+  private def deleteRecursive(path: File): Unit = {
+    if (!path.exists()) {
+      throw new FileNotFoundException(path.getAbsolutePath)
+    }
+
+    if (path.isDirectory) {
+      path.listFiles() foreach deleteRecursive
+    }
+    if (!path.delete()) {
+      throw new IOException(s"Could not delete ${path.absolutePath}")
+    }
+  }
 }
