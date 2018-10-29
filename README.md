@@ -1,3 +1,6 @@
+[![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/sbt-vaadin-plugin)
+[![Stars on Vaadin Directory](https://img.shields.io/vaadin-directory/star/sbt-vaadin-plugin.svg)](https://vaadin.com/directory/component/sbt-vaadin-plugin)
+
 # sbt-vaadin-plugin
 
 sbt-vaadin-plugin is a [sbt](http://www.scala-sbt.org/) plugin that makes possible to use sbt to build Vaadin projects. The plugin is for Vaadin 7 and sbt 0.13.
